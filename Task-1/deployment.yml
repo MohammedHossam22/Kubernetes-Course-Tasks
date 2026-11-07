@@ -32,6 +32,11 @@ spec:
         ports:
           - containerPort: 80         # this is the port where the nignx will be runnig its service in the pod
             name: web-port   
+            command: ['sh', '-c']
+            args:
+              - |
+                echo "<h1>hello in MLOPS MENA COMMUNITY : <strong>$(date '+%Y-%m-%d %H:%M:%S')</strong></h1>" > /usr/share/nginx/html/index.html
+                nginx -g 'daemon off;'
 #-----------------------------------------------------side container--------------------------------------------------------------------------
       - name: time-updater 
         image: busybox:1.36
