@@ -1,0 +1,55 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: session1
+  namespace: webapp  # the pods on the two nodes will be in the namespace that i just created
+spec:
+  replicas: 3 
+  selector:
+    matchLabels:          # that the way for the deployment to label the pods so that it can manage them
+      app: webapp
+  template:
+    metadata:             # this part acts as the what will each replica(pod) containt
+        name: session1-replicas
+        labels:
+          app: webapp
+    spec:
+      shareProcessNamespace: true    
+#-----------------------------------------------------init container--------------------------------------------------------------------------
+             
+      initContainers:
+        - name: init-done
+          image: busybox:1.36
+          command : ["sh", "-c" ,"echo 'done' ; exit 1"]
+
+          # then we will modify the deployment file to make the init container crash using :
+          # command : ["sh", "-c" ,"echo 'done' ; exit 1"]
+
+#-----------------------------------------------------main container--------------------------------------------------------------------------
+      containers:
+      - name: nginx
+        image: nginx:1.27
+        ports:
+          - containerPort: 80         # this is the port where the nignx will be runnig its service in the pod
+            name: web-port   
+#-----------------------------------------------------side container--------------------------------------------------------------------------
+      - name: time-updater 
+        image: busybox:1.36
+
+        securityContext:
+          capabilities:
+            add:
+              - SYS_PTRACE            # this must be used to allow the sidecare to access the file system of the nginx
+
+        command:                      # this script will run always and by checking that nginx process is still running then it will update the index.html continously
+          - /bin/sh
+          - -c
+          - |
+            while true; do
+              PID=$(pgrep -o nginx)
+
+              if [ -n "$PID" ]; then
+                echo "<h1>hello in MLOPS MENA COMMUNITY : <strong>$(date '+%Y-%m-%d %H:%M:%S')</strong></h1>" > /proc/$PID/root/usr/share/nginx/html/index.html
+              fi
+              sleep 1
+            done           
