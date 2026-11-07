@@ -25,8 +25,8 @@ i used minikube: 1 control plane + 2 workers.
 
 ## Pods
 
-| Container      | Type    | Image          | Job |
-| -------------- | ------- | -------------- | --- |
+| Container      | Type    | Image          |
+| -------------- | ------- | -------------- |
 | `init-done`    | init    | `busybox:1.36` |
 | `nginx`        | main    | `nginx:1.27`   |
 | `time-updater` | sidecar | `busybox:1.36` |
