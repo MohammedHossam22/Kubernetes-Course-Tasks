@@ -46,29 +46,27 @@ minikube start -p mlops --driver=docker
 kubectl get nodes
 ```
 
-![[Screenshot 2026-11-07 021627.png|936]]
+![nodes](screenshots/get-nodes.png)
 
 ## 2. Deploy
-
-[](https://github.com/Kerolos2019/Kubernetes_Course_Tasks/tree/main/Task_1#2-deploy)
 
 ```shell
 kubectl apply -f namespace.yaml
 kubectl apply -f deployment.yaml
 ```
 
-![[Pasted image 20261107032353.png]]
+![apply](screenshots/apply.png)
 
 ```
 kubectl get pods -n webapp -o wide
 ```
 
-![[Pasted image 20261107032455.png]]
+![pods](screenshots/get-pods.png)
 
 3 Pods `2/2 Running`: two on `mlops-m02`, one on `mlops-m03`.
 => The running state indicates that the `init container` has finished and now the main and the side are working
 
-![[Screenshot 2026-11-07 030025.png]]
+![]
 
 ## 3. Init ouput , Hosted web page
 
@@ -77,9 +75,9 @@ kubectl logs deployment/session1 -c init-done -n webapp
 kubectl port-forward deployment/session1 -n webapp 8000:80
 ```
 
-![[Pasted image 20261107032912.png]]
+![init](screenshots/inspect-output.png)
 
-![[Pasted image 20261107033146.png]]
+![web](screenshots/web-page.png)
 
 **untill here we have ran all sucuessfully**
 
@@ -96,7 +94,7 @@ kubectl apply -f deployment.yaml          # deployment.apps/web-deployment confi
 kubectl get pods -n webapp -w
 ```
 
-![[Pasted image 20261107033601.png]]
+![crash](screenshots/crash-apply.png)
 
 this is considerd an update to the deployemnt that why we can see that the hash of the new replica is different from the old one
 
@@ -109,4 +107,4 @@ kubectl rollout history deployment session1 -n webapp
 kubectl rollout undo deployment session1 -n webapp
 ```
 
-![[Pasted image 20261107033956.png]]
+![rollout](screenshots/rollout-undo.png)
