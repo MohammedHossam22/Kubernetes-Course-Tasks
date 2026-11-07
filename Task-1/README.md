@@ -25,13 +25,11 @@ i used minikube: 1 control plane + 2 workers.
 
 ## Pods
 
-| Container      | Type    | Image          | Job                                                                                                                           |
-| -------------- | ------- | -------------- | ----------------------------------------------------------------------------------------------------------------------------- |
-| `init-done`    | init    | `busybox:1.36` | `echo done`, exit 0. Nothing else starts until it succeeds.                                                                   |
-| `nginx`        | main    | `nginx:1.27`   | serves `index.html` on port 80                                                                                                |
-| `time-updater` | sidecar | `busybox:1.36` | Every 5 s: finds nginx with `pgrep -o nginx`, rewrites `/proc/$PID/root/usr/share/nginx/html/index.html`. Needs `SYS_PTRACE`. |
-
-`shareProcessNamespace: true` puts all containers in one process list, so the sidecar can see nginx's PID. Linux exposes each process's filesystem at `/proc/<pid>/root`, which is how the sidecar reaches nginx's files without a shared volume.
+| Container      | Type    | Image          | Job |
+| -------------- | ------- | -------------- | --- |
+| `init-done`    | init    | `busybox:1.36` |
+| `nginx`        | main    | `nginx:1.27`   |
+| `time-updater` | sidecar | `busybox:1.36` |
 
 ## Task solution methodologies
 
